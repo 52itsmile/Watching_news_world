@@ -10,13 +10,13 @@ manager = Manager(app)
 manager.add_command('db',MigrateCommand)
 Manager(app,db)
 
-@app.route('/')
-def index():
-    # redis_store.set(('name_test'),'sdgewgsfgwe')
-    # session['qwe'] = 'sfsdfwrwfsdgwfwgf'
-    current_app.logger.debug('debug')
-    current_app.logger.error('error')
-    return 'index'
+# @app.route('/')
+# def index():
+#     # redis_store.set(('name_test'),'sdgewgsfgwe')
+#     # session['qwe'] = 'sfsdfwrwfsdgwfwgf'
+#     current_app.logger.debug('debug')
+#     current_app.logger.error('error')
+#     return 'index'
 
 
 if __name__ == "__main__":
