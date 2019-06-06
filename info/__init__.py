@@ -9,7 +9,7 @@ from flask_session import Session
 from flask import session
 import redis
 from config import config
-from info.modules.index import index_blu
+
 
 db = SQLAlchemy()
 
@@ -24,7 +24,8 @@ def set_log(config_name):
     file_log_handler.setFormatter(formatter)
     # 为全局的日志工具对象（flask app使用的）添加日志记录器
     logging.getLogger().addHandler(file_log_handler)
-
+# 声明这个变量属于哪一个对象
+redis_store = None # type:StrictRedis
 def create_app(config_name):
     set_log(config_name)
     app = Flask(__name__)
@@ -33,6 +34,7 @@ def create_app(config_name):
     # db = SQLAlchemy(app)
     db.init_app(app)
     # 存储容易变化的值
+    global redis_store
     redis_store = StrictRedis(host=config[config_name].REDIS_HOST,port=config[config_name].REDIS_PORT)
 
     StrictRedis(app)
@@ -42,5 +44,6 @@ def create_app(config_name):
     Session(app)
 
     # 注册蓝图
+    from info.modules.index import index_blu
     app.register_blueprint(index_blu)
     return app
