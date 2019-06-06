@@ -1,3 +1,5 @@
+import logging
+
 from redis import StrictRedis
 class Config(object):
     # 设置项目配置项
@@ -19,8 +21,10 @@ class Config(object):
 
 class DevelopConfig(Config):
     DEBUG = True
+    LOG_LEVEL = logging.DEBUG
 class ProductConfig(Config):
     DEBUG = False
+
 class TestingConfig(Config):
     DEBUG = True
 
