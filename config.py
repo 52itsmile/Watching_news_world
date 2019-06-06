@@ -2,7 +2,7 @@ from redis import StrictRedis
 class Config(object):
     # 设置项目配置项
     SECRET_KEY = 'DSFSFdgrgsdfsef'
-    DEBUG = True
+
     SQLALCHEMY_DATABASE_URI = 'mysql://root:mysql@127.0.0.1:3306/Watching_news_world'
     SQLALCHEMY_TRACK_MODIFICATIONS = True
 
@@ -16,3 +16,17 @@ class Config(object):
     # 存储session到redis
     SESSION_REDIS = StrictRedis(host=REDIS_HOST,port=REDIS_PORT)
     PERMANENT_SESSION_LIFETIME = 86400
+
+class DevelopConfig(Config):
+    DEBUG = True
+class ProductConfig(Config):
+    DEBUG = False
+class TestingConfig(Config):
+    DEBUG = True
+
+
+config = {
+    'develop':DevelopConfig,
+    'product':ProductConfig,
+    'testing':TestingConfig
+}
