@@ -1,14 +1,14 @@
 from flask import current_app
 from flask_script import Manager
 from flask_migrate import Migrate,MigrateCommand
-from info import create_app,db
+from info import create_app,db,models
 
 app = create_app('develop')
 # 设置flask_script
-manager = Manager(app)
+manager = Manager(app,db)
 # 设置数据库迁移
 manager.add_command('db',MigrateCommand)
-Manager(app,db)
+Migrate(app,db)
 
 # @app.route('/')
 # def index():
