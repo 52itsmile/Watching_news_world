@@ -1,15 +1,17 @@
 import logging
 from logging.handlers import RotatingFileHandler
+from urllib import response
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_wtf.csrf import generate_csrf
 from redis import StrictRedis
 from flask_wtf import CSRFProtect
 from flask_session import Session
 from flask import session
 import redis
 from config import config
-
+from info.utils.common import do_index_class
 
 db = SQLAlchemy()
 
@@ -35,14 +37,21 @@ def create_app(config_name):
     db.init_app(app)
     # 存储容易变化的值
     global redis_store
-    redis_store = StrictRedis(host=config[config_name].REDIS_HOST,port=config[config_name].REDIS_PORT)
+    # redis_store = StrictRedis(host=config[config_name].REDIS_HOST,port=config[config_name].REDIS_PORT)
+    redis_store = StrictRedis(host=config[config_name].REDIS_HOST,port=config[config_name].REDIS_PORT, decode_responses=True)
 
     StrictRedis(app)
     # 开启csrf
     CSRFProtect(app)
+    @app.after_request
+    def after_request(response):
+        csrf_token = generate_csrf()
+        response.set_cookie("csrf_token", csrf_token)
+        return response
     # 设置session
     Session(app)
-
+    # 添加自定义过滤器
+    app.add_template_filter(do_index_class,"index_class")
     # 注册蓝图
     from info.modules.index import index_blu
     app.register_blueprint(index_blu)
